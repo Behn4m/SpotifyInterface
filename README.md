@@ -14,7 +14,7 @@ This module facilitates Spotify authorization and communication with the Spotify
 ## Introduction
 
 The Spotify Interface Module is designed to handle authorization and communication with the Spotify service on embedded systems, particularly using ESP-IDF.
-This component has following inquiries to compile: `mdns`, `esp_wifi`, `esp_event`, `protocol_examples_common`, `esp_https_server`, `esp_http_client`, `nvs_flash` `json` `esp_psram` `heap`
+This component has following inquiries to compile: `nvsFlash`, `mdns`, `esp_wifi`, `esp_event`, `protocol_examples_common`, `esp_https_server`, `esp_http_client`, `nvs_flash` `json` `esp_psram` `heap`
 
 ## File Structure
 
@@ -114,6 +114,13 @@ if (xSemaphoreTake(IsSpotifyAuthorizedSemaphore, portMAX_DELAY) == pdTRUE)
         vTaskDelay((pdMS_TO_TICKS(SEC * 2)));
         CommandResult = Spotify_SendCommand(SpotifyInterfaceHandler, Play);
     }
+```
+
+## How to add
+Open terminal, navigate to parent directory (the direcotry of your project you want to add this submodule as a component to it) and run command below:
+
+```c
+git submodule add https://github.com/Behn4m/SpotifyInterface components/SpotifyInterface
 ```
 
 ## Code structure:
