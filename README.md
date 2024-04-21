@@ -14,7 +14,7 @@ This module facilitates Spotify authorization and communication with the Spotify
 ## Introduction
 
 The Spotify Interface Module is designed to handle authorization and communication with the Spotify service on embedded systems, particularly using ESP-IDF.
-This component has following inquiries to compile: `nvsFlash`, `mdns`, `esp_wifi`, `esp_event`, `protocol_examples_common`, `esp_https_server`, `esp_http_client`, `nvs_flash` `json` `esp_psram` `heap`
+This component has following inquiries to compile: `esp_jpeg`, `nvsFlash`, `mdns`, `esp_wifi`, `esp_event`, `protocol_examples_common`, `esp_https_server`, `esp_http_client`, `nvs_flash` `json` `esp_psram` `heap`
 
 ## File Structure
 
@@ -24,6 +24,7 @@ This component has following inquiries to compile: `nvsFlash`, `mdns`, `esp_wifi
 - `SpotifyInterface.h`: Header file containing function prototypes and structure definitions.
 - `SpotifyMakeRequest.h`: Header file containing function prototypes.
 - `JsonExtraction.h`: Header file containing function prototypes.
+- `JpegDecode.h`: Header file containing function prototypes for decoding jpeg file.
 - `CMakeLists.txt`: Includes the dependencies, directories, and other CMake configurations.
 
 ## Dependencies
@@ -114,6 +115,23 @@ if (xSemaphoreTake(IsSpotifyAuthorizedSemaphore, portMAX_DELAY) == pdTRUE)
         vTaskDelay((pdMS_TO_TICKS(SEC * 2)));
         CommandResult = Spotify_SendCommand(SpotifyInterfaceHandler, Play);
     }
+```
+
+**Step 7:** Download and decode song cover photo (it is recommended to do this only if the song is changed)
+```c
+    bool isNewSong = strcmp(SpotifyInterfaceHandler.PlaybackInfo->SongImageURL, &imgLink);
+    if (isNewSong)
+    {
+        CommandResult = Spotify_SendCommand(SpotifyInterfaceHandler, GetCoverPhoto);
+        vTaskDelay(pdMS_TO_TICKS(100));
+        if (CommandResult == false)
+        {
+            ESP_LOGE(TAG, "Cover photo update failed");
+            return;
+        }
+        strcpy(imgLink, SpotifyInterfaceHandler.PlaybackInfo->SongImageURL);
+    }
+
 ```
 
 ## How to add

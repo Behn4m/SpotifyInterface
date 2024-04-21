@@ -7,6 +7,7 @@
 #include "JsonExtraction.h"
 #include "SpotifyTypedef.h"
 #include "rtc.h"
+#include "JpegDecode.h"
 
 // ****************************** Global Variables
 SpotifyInterfaceHandler_t *InterfaceHandler;
@@ -30,6 +31,7 @@ bool Spotify_TaskInit(SpotifyInterfaceHandler_t *SpotifyInterfaceHandler)
     InterfaceHandler = SpotifyInterfaceHandler;
     InterfaceHandler->PlaybackInfo = (PlaybackInfo_t *)malloc(sizeof(PlaybackInfo_t));
     InterfaceHandler->UserInfo = (UserInfo_t *)malloc(sizeof(UserInfo_t));
+    InterfaceHandler->CoverPhoto = (uint8_t *)malloc(COVER_PHOTO_SIZE * sizeof(uint8_t));
     PrivateHandler.Status = INIT;
     if (InterfaceHandler->ConfigAddressInSpiffs != NULL &&
         InterfaceHandler->IsSpotifyAuthorizedSemaphore != NULL)
@@ -283,8 +285,6 @@ static bool Spotify_TokenRenew(void)
     return true;
 }
 
-
-
 /**
  * @brief Sends a command to control Spotify.
  * This function sends various commands to control the Spotify application based on the given command value.
@@ -331,6 +331,7 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
             ESP_LOGI(TAG, "Command is sent successfully");
             retValue = true;
             break;
+
         case GetNowPlaying:
             Spotify_GetInfo(Command, PrivateHandler.token.AccessToken);
             IsSuccessfull = PrivateHandler.SpotifyBuffer.status == 200;
@@ -356,6 +357,27 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
             ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer, InterfaceHandler->UserInfo);
             retValue = true;
             break;
+
+        case GetCoverPhoto:
+            Spotify_DownloadImage(InterfaceHandler->PlaybackInfo->SongImageURL, PrivateHandler.token.AccessToken);
+            IsSuccessfull = PrivateHandler.SpotifyBuffer.status == 200;
+            if (!IsSuccessfull)
+            {
+                ESP_LOGW(TAG, "No song is found");
+                retValue = false;
+                break;
+            }
+            bool convertedSuccesfully = convertJpeg(PrivateHandler.SpotifyBuffer.MessageBuffer, PrivateHandler.SpotifyBuffer.ContentLength, InterfaceHandler->CoverPhoto, 150 * 150 * 2);
+            if (!convertedSuccesfully)
+            {
+                ESP_LOGW(TAG, "Image is not converted successfully");
+                retValue = false;
+                break;
+            }
+            addAlphaPixeltoImage(InterfaceHandler->CoverPhoto, 150, 150, 0xFF);
+            retValue  = true;
+            break;
+              
         default:
             break;
     }

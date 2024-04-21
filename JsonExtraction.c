@@ -154,17 +154,19 @@ int ExtractPlaybackInfoParamsfromJson(char *JsonPlaybackInfo, PlaybackInfo_t *pl
     cJSON *IsPlaying = cJSON_GetObjectItemCaseSensitive(J_PlaybackInfo, "is_playing");
     if (cJSON_IsBool(IsPlaying)) {
         playbackInfo->IsPlaying = cJSON_IsTrue(IsPlaying);
-    }
+    }  
 
     cJSON *ProgressMS = cJSON_GetObjectItemCaseSensitive(J_PlaybackInfo, "progress_ms");
     if (cJSON_IsNumber(ProgressMS)) {
         playbackInfo->Progress = ProgressMS->valueint;
     }
-        cJSON *Item = cJSON_GetObjectItemCaseSensitive(J_PlaybackInfo, "item");
+    
+    cJSON *Item = cJSON_GetObjectItemCaseSensitive(J_PlaybackInfo, "item");
     if (cJSON_IsObject(Item)) {
         cJSON *Album = cJSON_GetObjectItemCaseSensitive(Item, "album");
         cJSON *Artists = cJSON_GetObjectItemCaseSensitive(Item, "artists");
         cJSON *Name = cJSON_GetObjectItemCaseSensitive(Item, "name");
+        cJSON *DurationMS = cJSON_GetObjectItemCaseSensitive(Item, "duration_ms");
 
         if (cJSON_IsObject(Album) && cJSON_IsArray(Artists) && cJSON_IsString(Name)) {
             // Extract album information
@@ -189,13 +191,16 @@ int ExtractPlaybackInfoParamsfromJson(char *JsonPlaybackInfo, PlaybackInfo_t *pl
             // Extract song image URL
             cJSON *SongImageURLs = cJSON_GetObjectItemCaseSensitive(Album, "images");
             if (cJSON_IsArray(SongImageURLs) && cJSON_GetArraySize(SongImageURLs) > 0) {
-                cJSON *ThirdImage = cJSON_GetArrayItem(SongImageURLs, 2);
+                cJSON *ThirdImage = cJSON_GetArrayItem(SongImageURLs, 1);
                 cJSON *SongImageURL = cJSON_GetObjectItemCaseSensitive(ThirdImage, "url");
                 if (cJSON_IsString(SongImageURL) && SongImageURL->valuestring != NULL) {
                     strncpy(playbackInfo->SongImageURL, SongImageURL->valuestring, IMAGE_STR_SIZE - 1);
                     playbackInfo->SongImageURL[IMAGE_STR_SIZE - 1] = '\0';
                 }
             }
+
+            playbackInfo->Duration = DurationMS->valueint;
+
         }
     }
     ESP_LOGI(TAG, "** PLAYBACK INFO: ");
@@ -203,6 +208,7 @@ int ExtractPlaybackInfoParamsfromJson(char *JsonPlaybackInfo, PlaybackInfo_t *pl
     ESP_LOGI(TAG, "ArtistName: %s", playbackInfo->ArtistName);
     ESP_LOGI(TAG, "AlbumName: %s", playbackInfo->AlbumName);
     ESP_LOGI(TAG, "SongName: %s", playbackInfo->SongName);
+    ESP_LOGI(TAG, "Duration: %d", playbackInfo->Duration);
     ESP_LOGI(TAG, "ProgressMS: %d", playbackInfo->Progress);
     ESP_LOGI(TAG, "SongImageURL: %s", playbackInfo->SongImageURL);
     ESP_LOGI(TAG, "************** ");
