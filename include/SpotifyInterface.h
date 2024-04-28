@@ -16,9 +16,9 @@ extern "C"
 #define PLAY_PAUSE 1
 #define PLAY_NEXT 2
 #define PLAY_PREV 3
-#define STOP 4
-#define PLAY 5
-#define PAUSE 6
+// #define STOP 4
+// #define PLAY 5
+// #define PAUSE 6
 #define GET_NOW_PLAYING 7
 #define GET_USER_INFO 8
 #define GET_SONG_IMAGE_URL 9
