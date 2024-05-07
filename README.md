@@ -117,7 +117,7 @@ if (xSemaphoreTake(IsSpotifyAuthorizedSemaphore, portMAX_DELAY) == pdTRUE)
     }
 ```
 
-**Step 7:** Download and decode song cover photo (it is recommended to do this only if the song is changed)
+**Step 7:** Download and decode the song cover photo (it is recommended to do this only if the song is changed)
 ```c
     bool isNewSong = strcmp(SpotifyInterfaceHandler.PlaybackInfo->SongImageURL, &imgLink);
     if (isNewSong)
@@ -135,10 +135,10 @@ if (xSemaphoreTake(IsSpotifyAuthorizedSemaphore, portMAX_DELAY) == pdTRUE)
 ```
 
 ## How to add
-Open terminal, navigate to parent directory (the direcotry of your project you want to add this submodule as a component to it) and run command below:
+Open the terminal, navigate to the parent directory (the directory of your project to you want to add this submodule as a component it) and run the command below:
 
 ```c
-git submodule add https://github.com/Behn4m/SpotifyInterface components/SpotifyInterface
+git submodule add -f https://github.com/Behn4m/SpotifyInterface components/SpotifyInterface
 ```
 
 ## Code structure:
