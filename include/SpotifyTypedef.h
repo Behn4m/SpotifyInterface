@@ -12,7 +12,7 @@ extern "C"
 #include "esp_netif.h"
 #include "esp_eth.h"
 #include "protocol_examples_common.h"
-#include <esp_https_server.h>
+#include <esp_http_server.h>
 #include "esp_tls.h"
 #include "sdkconfig.h"
 #include "mdns.h"
