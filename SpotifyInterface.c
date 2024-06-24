@@ -346,15 +346,21 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
             break;
 
         case GetUserInfo:
+        //SEZ@Done ESP_LOGW just for test.
+        ESP_LOGW(TAG, "GetUserInfo");
             Spotify_GetInfo(Command, PrivateHandler.token.AccessToken);
-            IsSuccessfull = PrivateHandler.SpotifyBuffer.status == 200;
+        ESP_LOGW(TAG, "Spotify_GetInfo");    
+            IsSuccessfull = (PrivateHandler.SpotifyBuffer.status == 200)? true:false;
             if (!IsSuccessfull)
             {
                 ESP_LOGW(TAG, "No user is found");
                 retValue = false;
                 break;
             }
-            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer, InterfaceHandler->UserInfo);
+        ESP_LOGW(TAG, "IsSuccessfull");    
+            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer, 
+            InterfaceHandler->UserInfo);
+            ESP_LOGW(TAG, "ExtractUserInfoParamsfromJson");    
             retValue = true;
             break;
 
