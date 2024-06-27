@@ -4,17 +4,12 @@ extern "C"
 #endif
 #ifndef TYPE_DEF_H_
 #define TYPE_DEF_H_
-#include <esp_wifi.h>
 #include <esp_event.h>
 #include <esp_log.h>
 #include <esp_system.h>
 #include <sys/param.h>
 #include "esp_netif.h"
-#include "esp_eth.h"
-#include "protocol_examples_common.h"
 #include <esp_http_server.h>
-#include "esp_tls.h"
-#include "sdkconfig.h"
 #include "mdns.h"
 #include "freertos/queue.h"
 #include "esp_psram.h"
