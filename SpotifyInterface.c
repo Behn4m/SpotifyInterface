@@ -354,7 +354,7 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
                 retValue = false;
                 break;
             }
-            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer,InterfaceHandler->UserInfo);
+            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer, InterfaceHandler->UserInfo);
             retValue = true;
             break;
 
