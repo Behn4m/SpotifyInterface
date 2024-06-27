@@ -345,8 +345,8 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
             retValue = true;
             break;
 
-        case GetUserInfo:        
-            Spotify_GetInfo(Command, PrivateHandler.token.AccessToken);        
+        case GetUserInfo: 
+            Spotify_GetInfo(Command, PrivateHandler.token.AccessToken);
             IsSuccessfull = PrivateHandler.SpotifyBuffer.status == 200;
             if (!IsSuccessfull)
             {
@@ -354,8 +354,8 @@ bool Spotify_SendCommand(SpotifyInterfaceHandler_t SpotifyInterfaceHandler, int 
                 retValue = false;
                 break;
             }        
-            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer, 
-            InterfaceHandler->UserInfo);            
+            ExtractUserInfoParamsfromJson(PrivateHandler.SpotifyBuffer.MessageBuffer,
+            InterfaceHandler->UserInfo);         
             retValue = true;
             break;
 
